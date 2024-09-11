@@ -1,15 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Logo: React.FC = () => {
   return (
-    <div className="flex items-center">
-      <img
-        src="../src/assets/logo.svg"
-        alt="Logo"
-        className="h-10 w-auto mr-2"
-      />
-      <span className="text-xl font-bold text-gray-800">DATAFRAME</span>
-    </div>
+    <Link to="/" className="flex items-center">
+      <img src="../src/assets/logo.svg" alt="Logo" className="h-10 w-10 mr-2" />
+      <span className="text-xl font-bold text-white">DATAFRAME</span>
+    </Link>
   );
 };
 

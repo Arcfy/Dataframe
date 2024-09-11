@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
-import Inventory from "./components/Inventory";
-import Market from "./components/Market";
+import Market from "./pages/Market";
+import Inventory from "./pages/Inventory";
 import Header from "./components/Header";
 
 const App: React.FC = () => {
@@ -12,8 +12,9 @@ const App: React.FC = () => {
         <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/inventory" element={<Inventory />} />
           <Route path="/market" element={<Market />} />
+          <Route path="/inventory" element={<Inventory />} />
+          <Route path="/*" element={<LandingPage />} />
         </Routes>
       </div>
     </Router>
