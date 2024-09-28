@@ -1,44 +1,59 @@
-import React, { useState, useRef } from 'react';
-import { AuthModule } from '../api/auth';
+import React, { useState , useRef } from 'react';
+import axios from 'axios';
 import { AuthState } from '../types/auth';
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<AuthState | null>(null);
   const [showLogin, setShowLogin] = useState(false);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
 
+    const data = {
+      email,
+      password,
+      auth_type: 'header',
+    };
+
+    const config = {
+      method: 'post',
+      url: '/api/auth/signin', // Updated to use the proxy
+      headers: {
+        'Content-Type': 'application/json; utf-8',
+        'Accept': 'application/json',
+        'Authorization': 'JWT',
+        'platform': 'pc',
+        'language': 'en',
+      },
+      data: JSON.stringify(data),
+    };
+
     try {
-      const loggedInUser = await AuthModule.login(email, password);
-      setUser(loggedInUser);
-      console.log('User logged in:', loggedInUser);
-      // Redirect or update UI as needed
+      const response = await axios.request(config);
+      console.log(response.data);
+      // Handle successful login (e.g., store token, redirect)
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred');
-      }
+      console.error(err);
+      setError('Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleBackdropClick = (e: React.MouseEvent) => {
+    const handleBackdropClick = (e: React.MouseEvent) => {
     // Close the modal if the click was outside the modal content
     if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
       setShowLogin(false);
     }
   };
-  
+
   return (
     <div>
       <button
@@ -69,7 +84,7 @@ const Login: React.FC = () => {
             {/* Closing the login box */}
             <h3 className="text-lg mb-4">Login</h3>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleLogin}>
               <input
                 type="email"
                 id="email"
